@@ -8,7 +8,10 @@ import nltk
 import streamlit as st
 from nltk.stem import WordNetLemmatizer
 
-
+import os
+nltk_data_path = os.path.join(os.getcwd(), "nltk_data")  # Store locally
+nltk.data.path.append(nltk_data_path)  
+nltk.download('punkt', download_dir=nltk_data_path)
 # Download NLTK data
 nltk.download('punkt')
 nltk.download('wordnet')
