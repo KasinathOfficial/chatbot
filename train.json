@@ -1,0 +1,30 @@
+{
+    "intents": [
+      {
+        "tag": "greeting",
+        "patterns": ["Hi", "Hello", "Hey"],
+        "responses": ["Hello! How can I assist you today?", "Hi there! What can I do for you?"]
+      },
+      {
+        "tag": "goodbye",
+        "patterns": ["Bye", "See you later", "Goodbye"],
+        "responses": ["Goodbye! Have a great day.", "See you later!"]
+      },
+      {
+        "tag": "college_info",
+        "patterns": ["Tell me about the college", "What courses are available?", "College information"],
+        "responses": ["Our college(sri venkateswara college of engineering) offers a variety of courses including Engineering, MBA, Science, MCA."]
+      },
+      {
+        "tag": "admission",
+        "patterns": ["How to apply?", "Admission process", "What are the admission requirements?"],
+        "responses": ["You can apply online through our website. The admission requirements vary for different courses. Please visit our admissions page for more details."]
+      },
+      {
+        "tag": "contact",
+        "patterns": ["How can I contact the college?", "Contact details", "Phone number"],
+        "responses": ["You can contact us at 123-456-7890 or email us at info@college.edu"]
+      }
+    ]
+  }
+  
