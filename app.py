@@ -7,10 +7,7 @@ import numpy as np
 import nltk
 import streamlit as st
 from nltk.stem import WordNetLemmatizer
-#from google.colab import drive
 
-# Mount Google Drive
-#drive.mount('/content/drive')
 
 # Download NLTK data
 nltk.download('punkt')
