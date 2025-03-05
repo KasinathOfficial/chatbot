@@ -2,25 +2,18 @@ import json
 import random
 import torch
 import torch.nn as nn
-import torch.optim as optim
 import numpy as np
 import nltk
-import streamlit as st
 from nltk.stem import WordNetLemmatizer
+import gradio as gr
 
-import os
-nltk_data_path = os.path.join(os.getcwd(), "nltk_data")  # Store locally
-nltk.data.path.append(nltk_data_path)  
-nltk.download('punkt', download_dir=nltk_data_path)
-# Download NLTK data
-nltk.download('punkt')
-nltk.download('wordnet')
+nltk.download("punkt")
+nltk.download("wordnet")
 
 # Load training data
 with open("train.json", "r") as file:
     data = json.load(file)
 
-# Text processing
 lemmatizer = WordNetLemmatizer()
 
 def tokenize(sentence):
@@ -42,6 +35,7 @@ all_words = []
 tags = []
 x_train = []
 y_train = []
+
 for intent in data["intents"]:
     tags.append(intent["tag"])
     for pattern in intent["patterns"]:
@@ -49,6 +43,7 @@ for intent in data["intents"]:
         all_words.extend(words)
         x_train.append(words)
         y_train.append(intent["tag"])
+
 all_words = sorted(set([stem(w) for w in all_words if w not in ["?", "!", "."]]))
 tags = sorted(set(tags))
 
@@ -57,7 +52,6 @@ y_train_encoded = [tags.index(tag) for tag in y_train]
 x_train_encoded = np.array(x_train_encoded)
 y_train_encoded = np.array(y_train_encoded)
 
-# Define Neural Network
 class ChatBotModel(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super(ChatBotModel, self).__init__()
@@ -65,34 +59,16 @@ class ChatBotModel(nn.Module):
         self.layer2 = nn.Linear(hidden_size, hidden_size)
         self.layer3 = nn.Linear(hidden_size, output_size)
         self.relu = nn.ReLU()
-    
     def forward(self, x):
         x = self.relu(self.layer1(x))
         x = self.relu(self.layer2(x))
         return self.layer3(x)
 
-# Train the model
 input_size = len(all_words)
 hidden_size = 8
 output_size = len(tags)
 model = ChatBotModel(input_size, hidden_size, output_size)
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-dataset = [(torch.tensor(x, dtype=torch.float32), torch.tensor(y, dtype=torch.long)) for x, y in zip(x_train_encoded, y_train_encoded)]
-for epoch in range(1000):
-    total_loss = 0
-    for x_batch, y_batch in dataset:
-        optimizer.zero_grad()
-        output = model(x_batch)
-        loss = criterion(output.unsqueeze(0), y_batch.unsqueeze(0))
-        loss.backward()
-        optimizer.step()
-        total_loss += loss.item()
-    if epoch % 100 == 0:
-        print(f"Epoch {epoch}, Loss: {total_loss:.4f}")
-
-# Chatbot response function
 def chatbot_response(user_input):
     tokenized_sentence = tokenize(user_input)
     bow = bag_of_words(tokenized_sentence, all_words)
@@ -103,14 +79,7 @@ def chatbot_response(user_input):
         if intent["tag"] == predicted_tag:
             return random.choice(intent["responses"])
 
-# Streamlit UI
-st.title("🤖 AI Chatbot")
-st.write("Ask me anything!")
+iface = gr.Interface(fn=chatbot_response, inputs="text", outputs="text")
 
-# Input field
-user_input = st.text_input("You:", "")
-
-if st.button("Send"):
-    if user_input:
-        response = chatbot_response(user_input)
-        st.text_area("Bot:", value=response, height=100, max_chars=None, key="response")
+if __name__ == "__main__":
+    iface.launch(server_name="0.0.0.0", server_port=8080)
