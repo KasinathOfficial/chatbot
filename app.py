@@ -12,6 +12,7 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.utils import to_categorical
 
 # Load chatbot intents
 intents = {
@@ -59,6 +60,7 @@ classes = sorted(set(classes))
 X_train = []
 y_train = []
 label_encoder = LabelEncoder()
+y_train = to_categorical(y_train, num_classes=len(classes))
 labels_encoded = label_encoder.fit_transform(classes)
 
 for pattern, tag in documents:
@@ -80,7 +82,7 @@ model = Sequential([
 
 # Compile and train the model
 model.compile(loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
-model.fit(X_train, y_train, epochs=200, batch_size=8, verbose=0)
+model.fit(X_train, y_train, epochs=50, batch_size=4, verbose=1)
 
 # Define chatbot functions
 def clean_text(text):
