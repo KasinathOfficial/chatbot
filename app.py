@@ -2,16 +2,15 @@ import json
 import random
 import numpy as np
 import nltk
+# ✅ FIX: Download required NLTK models
+nltk.download('punkt')  
+nltk.download('wordnet')  
 import streamlit as st
 import tensorflow as tf
 from nltk.stem import WordNetLemmatizer
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
-
-# ✅ FIX: Download required NLTK models
-nltk.download('punkt')  
-nltk.download('wordnet')  
 
 # Load chatbot intents
 intents = {
