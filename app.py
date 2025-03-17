@@ -59,9 +59,14 @@ classes = sorted(set(classes))
 # Encode training data
 X_train = []
 y_train = []
+#label_encoder = LabelEncoder()
+#y_train = to_categorical(y_train, num_classes=len(classes))
+#labels_encoded = label_encoder.fit_transform(classes)
+
 label_encoder = LabelEncoder()
-y_train = to_categorical(y_train, num_classes=len(classes))
-labels_encoded = label_encoder.fit_transform(classes)
+label_encoder.fit(classes)
+y_train.append(label_encoder.transform([tag])[0])  # Fix indexing issue
+
 
 for pattern, tag in documents:
     bag = [1 if w in [lemmatizer.lemmatize(word.lower()) for word in pattern] else 0 for w in words]
