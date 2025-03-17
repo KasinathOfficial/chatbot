@@ -5,6 +5,7 @@ import nltk
 # ✅ FIX: Download required NLTK models
 nltk.download('punkt')  
 nltk.download('wordnet')  
+nltk.download('punkt_tab')
 import streamlit as st
 import tensorflow as tf
 from nltk.stem import WordNetLemmatizer
