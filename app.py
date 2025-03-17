@@ -65,7 +65,7 @@ y_train = []
 
 label_encoder = LabelEncoder()
 label_encoder.fit(classes)
-y_train.append(label_encoder.transform([tag])[0])  # Fix indexing issue
+#y_train.append(label_encoder.transform([tag])[0])  # Fix indexing issue
 
 
 for pattern, tag in documents:
