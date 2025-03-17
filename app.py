@@ -96,7 +96,7 @@ def get_response(intent):
             return random.choice(i["responses"])
 
 # Streamlit UI
-st.title("🤖 AI Chatbot")
+st.title("🤖SVCE AI Chatbot")
 st.write("Ask me anything!")
 
 user_input = st.text_input("You: ", "")
