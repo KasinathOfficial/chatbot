@@ -61,10 +61,11 @@ X_train = []
 y_train = []
 #label_encoder = LabelEncoder()
 #y_train = to_categorical(y_train, num_classes=len(classes))
-#labels_encoded = label_encoder.fit_transform(classes)
+
 
 label_encoder = LabelEncoder()
 label_encoder.fit(classes)
+labels_encoded = label_encoder.fit_transform(classes)
 #y_train.append(label_encoder.transform([tag])[0])  # Fix indexing issue
 
 
