@@ -1,4 +1,6 @@
-torch
 numpy
 nltk
-gradio
+tensorflow
+streamlit
+pandas
+sklearn
