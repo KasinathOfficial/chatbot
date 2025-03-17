@@ -1,85 +1,99 @@
 import json
 import random
-import torch
-import torch.nn as nn
 import numpy as np
 import nltk
+import streamlit as st
+import tensorflow as tf
 from nltk.stem import WordNetLemmatizer
-import gradio as gr
+from sklearn.preprocessing import LabelEncoder
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
 
-nltk.download("punkt")
-nltk.download("wordnet")
+# Download required NLTK data
+nltk.download('punkt')
+nltk.download('wordnet')
 
-# Load training data
-with open("train.json", "r") as file:
+# Load intents
+with open("train.json") as file:
     data = json.load(file)
-
+    
+# Initialize NLP tools
 lemmatizer = WordNetLemmatizer()
 
-def tokenize(sentence):
-    return nltk.word_tokenize(sentence.lower())
-
-def stem(word):
-    return lemmatizer.lemmatize(word.lower())
-
-def bag_of_words(tokenized_sentence, words):
-    tokenized_sentence = [stem(w) for w in tokenized_sentence]
-    bag = np.zeros(len(words), dtype=np.float32)
-    for idx, w in enumerate(words):
-        if w in tokenized_sentence:
-            bag[idx] = 1.0
-    return bag
-
 # Prepare training data
-all_words = []
-tags = []
-x_train = []
-y_train = []
+words = []
+classes = []
+documents = []
+ignore_words = ["?", "!"]
 
 for intent in data["intents"]:
-    tags.append(intent["tag"])
     for pattern in intent["patterns"]:
-        words = tokenize(pattern)
-        all_words.extend(words)
-        x_train.append(words)
-        y_train.append(intent["tag"])
+        word_list = nltk.word_tokenize(pattern)
+        words.extend(word_list)
+        documents.append((word_list, intent["tag"]))
+        if intent["tag"] not in classes:
+            classes.append(intent["tag"])
 
-all_words = sorted(set([stem(w) for w in all_words if w not in ["?", "!", "."]]))
-tags = sorted(set(tags))
+# Lemmatize and sort words
+words = sorted(set([lemmatizer.lemmatize(w.lower()) for w in words if w not in ignore_words]))
+classes = sorted(set(classes))
 
-x_train_encoded = [bag_of_words(sentence, all_words) for sentence in x_train]
-y_train_encoded = [tags.index(tag) for tag in y_train]
-x_train_encoded = np.array(x_train_encoded)
-y_train_encoded = np.array(y_train_encoded)
+# Encode training data
+X_train = []
+y_train = []
+label_encoder = LabelEncoder()
+labels_encoded = label_encoder.fit_transform(classes)
 
-class ChatBotModel(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size):
-        super(ChatBotModel, self).__init__()
-        self.layer1 = nn.Linear(input_size, hidden_size)
-        self.layer2 = nn.Linear(hidden_size, hidden_size)
-        self.layer3 = nn.Linear(hidden_size, output_size)
-        self.relu = nn.ReLU()
-    def forward(self, x):
-        x = self.relu(self.layer1(x))
-        x = self.relu(self.layer2(x))
-        return self.layer3(x)
+for pattern, tag in documents:
+    bag = [1 if w in [lemmatizer.lemmatize(word.lower()) for word in pattern] else 0 for w in words]
+    X_train.append(bag)
+    y_train.append(labels_encoded[classes.index(tag)])
 
-input_size = len(all_words)
-hidden_size = 8
-output_size = len(tags)
-model = ChatBotModel(input_size, hidden_size, output_size)
+X_train = np.array(X_train)
+y_train = np.array(y_train)
 
-def chatbot_response(user_input):
-    tokenized_sentence = tokenize(user_input)
-    bow = bag_of_words(tokenized_sentence, all_words)
-    bow_tensor = torch.tensor(bow, dtype=torch.float32)
-    output = model(bow_tensor)
-    predicted_tag = tags[torch.argmax(output).item()]
-    for intent in data["intents"]:
-        if intent["tag"] == predicted_tag:
-            return random.choice(intent["responses"])
+# Build Neural Network Model
+model = Sequential([
+    Dense(128, activation="relu", input_shape=(len(X_train[0]),)),
+    Dropout(0.5),
+    Dense(64, activation="relu"),
+    Dropout(0.5),
+    Dense(len(classes), activation="softmax")
+])
 
-iface = gr.Interface(fn=chatbot_response, inputs="text", outputs="text")
+# Compile and train the model
+model.compile(loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+model.fit(X_train, y_train, epochs=200, batch_size=8, verbose=0)
 
-if __name__ == "__main__":
-    iface.launch(server_name="0.0.0.0", server_port=8080)
+# Define chatbot functions
+def clean_text(text):
+    tokens = nltk.word_tokenize(text)
+    tokens = [lemmatizer.lemmatize(w.lower()) for w in tokens]
+    return tokens
+
+def bag_of_words(sentence):
+    sentence_words = clean_text(sentence)
+    bag = [1 if w in sentence_words else 0 for w in words]
+    return np.array(bag)
+
+def predict_intent(sentence):
+    bow = bag_of_words(sentence)
+    prediction = model.predict(np.array([bow]))[0]
+    predicted_class_index = np.argmax(prediction)
+    return classes[predicted_class_index]
+
+def get_response(intent):
+    for i in intents["intents"]:
+        if i["tag"] == intent:
+            return random.choice(i["responses"])
+
+# Streamlit UI
+st.title("🤖 AI Chatbot")
+st.write("Ask me anything!")
+
+user_input = st.text_input("You: ", "")
+
+if user_input:
+    intent = predict_intent(user_input)
+    response = get_response(intent)
+    st.text_area("Chatbot:", value=response, height=100, max_chars=None)
