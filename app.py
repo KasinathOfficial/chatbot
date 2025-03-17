@@ -44,7 +44,7 @@ ignore_words = ["?", "!"]
 
 for intent in intents["intents"]:
     for pattern in intent["patterns"]:
-        word_list = nltk.word_tokenize(pattern)  # ✅ This will work now
+        word_list = nltk.word_tokenize(pattern)  # This will work now
         words.extend(word_list)
         documents.append((word_list, intent["tag"]))
         if intent["tag"] not in classes:
