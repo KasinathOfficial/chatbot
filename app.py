@@ -15,25 +15,8 @@ from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.utils import to_categorical
 
 # Load chatbot intents
-intents = {
-    "intents": [
-        {
-            "tag": "greeting",
-            "patterns": ["Hello", "Hi", "Hey", "How are you?", "Is anyone there?"],
-            "responses": ["Hello!", "Hi there!", "Hey!", "How can I help you?"]
-        },
-        {
-            "tag": "goodbye",
-            "patterns": ["Bye", "See you later", "Goodbye"],
-            "responses": ["Goodbye!", "See you soon!", "Take care!"]
-        },
-        {
-            "tag": "thanks",
-            "patterns": ["Thanks", "Thank you", "That's helpful"],
-            "responses": ["You're welcome!", "Anytime!", "Glad I could help."]
-        }
-    ]
-}
+with open("train.json") as file:
+    intents = json.load(file)
 
 # Initialize NLP tools
 lemmatizer = WordNetLemmatizer()
