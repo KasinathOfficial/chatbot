@@ -24,7 +24,72 @@
         "tag": "contact",
         "patterns": ["How can I contact the college?", "Contact details", "Phone number"],
         "responses": ["You can contact us at 9704621842 or email us at svce@college.edu"]
-      }
+      },
+        {
+      "tag": "admissions",
+      "patterns": [
+        "How can I apply for admission?",
+        "What are the eligibility criteria for B.Tech?",
+        "What is the admission process for international students?"
+      ],
+      "responses": [
+        "To apply for admission, please fill out the Admission Enquiry Form on our portal. Our Admissions Department will contact you and guide you with the next steps. You can also contact the Admissions In-charge at +91 8886644985 or +91 8886644969 for more information.",
+        "The eligibility criteria for B.Tech programs include a minimum percentage in your higher secondary education and qualifying entrance exams. For detailed information, please visit our admissions page.",
+        "International students can apply by filling out the Admission Enquiry Form on our portal. Our Admissions Department will guide you through the process. For direct assistance, contact the Admissions In-charge at +91 8886644985 or +91 8886644969."
+      ]
+    },
+    {
+      "tag": "academic_calendar",
+      "patterns": [
+        "What is the academic calendar for the current year?",
+        "When do classes commence for the new semester?",
+        "Where can I find the exam schedules?"
+      ],
+      "responses": [
+        "The academic calendars for various programs are available on our Examinations page. For example, the MCA I & II Semester Academic Calendar for 2024-2025 can be found here: [MCA Academic Calendar](https://svce.edu.in/examinations.php).",
+        "Classes for the new semester commence as per the dates mentioned in the respective academic calendars. Please refer to the specific program's calendar on our Examinations page.",
+        "Exam schedules, including internal and external timetables, are available on our Examinations page. You can find the relevant schedules under the 'External Time Tables' and 'Internal Time Tables' sections."
+      ]
+    },
+    {
+      "tag": "results",
+      "patterns": [
+        "How can I check my exam results?",
+        "Where are the latest examination results published?",
+        "I need to find my MCA semester results."
+      ],
+      "responses": [
+        "You can check your exam results on our Results Portal. Please visit [SVCE Results](https://svce.edu.in/results/home) and select your program and semester to view the results.",
+        "The latest examination results are published on our Results Portal. For instance, the MCA II Year II Semester (R20) Regular Examinations results from August 2023 were published on 01-09-2023. Access them here: [MCA Results](https://svce.edu.in/results/home).",
+        "To find your MCA semester results, please visit our Results Portal and select the appropriate semester and examination from the list provided."
+      ]
+    },
+    {
+      "tag": "contact_information",
+      "patterns": [
+        "How can I contact SVCE?",
+        "What is the address of SVCE?",
+        "I need the phone number for SVCE admissions."
+      ],
+      "responses": [
+        "You can contact SVCE by visiting our Contact Us page: [Contact SVCE](https://svce.edu.in/contactus.php). For admissions inquiries, please call +91 8886644985 or +91 8886644969.",
+        "SVCE is located at Karakambadi Road, Tirupati-517507, Andhra Pradesh, INDIA. For more details, visit our Contact Us page: [Contact SVCE](https://svce.edu.in/contactus.php).",
+        "For admissions inquiries, please contact the Admissions In-charge at +91 8886644985 or +91 8886644969. More information is available on our Admissions page: [SVCE Admissions](https://svce.edu.in/admission.php)."
+      ]
+    },
+    {
+      "tag": "about_svce",
+      "patterns": [
+        "Tell me about SVCE.",
+        "What is the vision of SVCE?",
+        "Can you provide an overview of SVCE?"
+      ],
+      "responses": [
+        "Sri Venkateswara College of Engineering (SVCE) is committed to creating leaders through its innovative programs, outstanding faculty, and thought leadership. SVCE nurtures global leaders who can work well in diverse cultural contexts and succeed in the global economy.",
+        "The vision of SVCE is to be a center of excellence focusing on high-quality technical education, research, and technical services. We aim to develop global leadership competence, ethical values, and entrepreneurial skills to meet real-time requirements.",
+        "SVCE persistently seeks and adopts innovative methods to improve the quality of higher education. Our mission includes imparting high-quality technical education by providing state-of-the-art infrastructure and core instruction."
+      ]
+    }
     ]
   }
   
